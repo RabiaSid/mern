@@ -17,16 +17,17 @@ export default function InputSelect(props: propsInputSelect) {
   return (
     <>
       <Select
-        // className="border-2 border-teal-700 focus:border-teal-100 w-full outline-none rounded my-1 "
-        className="border border-primary border-2 
-        form-control border-success w-100 outline-0 
+        className="border border-primary
+        form-control  w-100 outline-1 
         rounded my-1 bg-light"
+        variant='outlined'
         labelId="country-select-label"
         id="country-select"
         name={name}
         value={SelectValue}
         onChange={SelectOnChange}
         displayEmpty
+        
         sx={{
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "transparent", // Remove border
