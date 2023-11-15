@@ -6,6 +6,7 @@ import Dropdown from "../dropdown";
 import PrimaryButton from "../button";
 import { useNavigate } from "react-router-dom";
 import { MenuItem } from "@mui/material";
+import { Post } from "../../config/api-methods";
 
 export default function AppDrawer() {
   const [open, setOpen] = useState(false);
@@ -29,25 +30,36 @@ export default function AppDrawer() {
   // signup
 
   const fillModel = (key: string, val: any) => {
-    model[key] = val;
-    setModel({ ...model });
+    setModel((prevModel: any) => ({
+      ...prevModel,
+      [key]: val,
+    }));
   };
 
   const navigate = useNavigate();
 
-  let signUpUser = () => {
+  let signUpUser = async () => {
     console.log("Model data:", model);
-    // dispatch(add({ ...model }))
-    // fbSignUp(model)
-    //   .then((res: any) => {
-    //     console.log("Response data:", res);
-    //     console.log(`signup successfull`)
-    //     navigate("/app-home");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    try {
+      const res = await Post("/auth/signup", model);
+      const { user } = res.data;
+      console.log(res.data)
+      navigate("/appProduct");
+      // // Store the token securely (you may want to use more secure storage methods)
+      // localStorage.setItem("authToken", token);
+
+      // // Set the token in the headers for subsequent requests
+      // setAuthToken(token);
+
+      // Navigate to the appropriate dashboard based on the user role
+      // handleNavigation(user.role.toLowerCase());
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
+
+
+
 
   return (
     <>
@@ -72,6 +84,20 @@ export default function AppDrawer() {
         </div>
         <div className="">
           <InputField
+            value={model.email || ""}
+            onChange={(e: any) => fillModel("email", e.target.value)}
+            label="Email"
+          />
+        </div>
+        <div className="">
+          <InputField
+            value={model.cnic || ""}
+            onChange={(e: any) => fillModel("cnic", e.target.value)}
+            label="Cnic"
+          />
+        </div>
+        <div className="">
+          <InputField
             value={model.contact || ""}
             onChange={(e: any) => fillModel("contact", e.target.value)}
             label="Contact"
@@ -80,8 +106,8 @@ export default function AppDrawer() {
         <div>
         <Dropdown
               HeaderValue="Role"
-              // SelectValue={model.role}
-              // SelectOnChange={(e: any) => fillModel("role", e.target.value)}
+              SelectValue={model.role}
+              SelectOnChange={(e: any) => fillModel("role", e.target.value)}
             >
               {Roles.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -104,3 +130,11 @@ export default function AppDrawer() {
     </>
   );
 }
+
+// const setAuthToken = (token: string) => {
+//   if (token) {
+//     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+//   } else {
+//     delete axios.defaults.headers.common["Authorization"];
+//   }
+// };

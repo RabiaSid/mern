@@ -10,21 +10,34 @@ export default function SignIn() {
   const navigate = useNavigate();
   const [model, setModel] = useState<any>({});
 
-
-  let LoginUser = () => {
-    console.log(model);
-
-    Post("auth/signup", model)
-    .then((res: any) => {
-      // res: JSON.stringify(res.data),
-      console.log("Successfully Add New --Post", res.data);
-      setModel(res.data);
-      
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+  
+  const fillModel = (key: string, val: any) => {
+    setModel((prevModel: any) => ({
+      ...prevModel,
+      [key]: val,
+    }));
   };
+
+
+  let LoginUser = async () => {
+    try {
+      const res = await Post("/auth/login", model);
+      const { user } = res.data;
+      console.log(res.data)
+      navigate("/appProduct");
+      // // Store the token securely (you may want to use more secure storage methods)
+      // localStorage.setItem("authToken", token);
+
+      // // Set the token in the headers for subsequent requests
+      // setAuthToken(token);
+
+      // Navigate to the appropriate dashboard based on the user role
+      // handleNavigation(user.role.toLowerCase());
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
 
 
 
@@ -49,15 +62,15 @@ export default function SignIn() {
 
           <div className="py-3">
             <InputField
-              value={model.name ?? ""}
-              onChange={(e) => setModel({ ...model, name: e.target.value })}
+              value={model.email ?? ""}
+              onChange={(e: any) => fillModel("email", e.target.value)}
               label="Email"
             />
           </div>
           <div className="py-3">
             <InputField
               value={model.password || ""}
-              onChange={(e) => setModel({ ...model, password: e.target.value })}
+              onChange={(e: any) => fillModel("password", e.target.value)}
               label="Password"
             />
           </div>

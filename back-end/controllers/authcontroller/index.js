@@ -14,16 +14,16 @@ const AuthController = {
         errArr.push("User Name is Required");
       }
       if (!obj.email) {
-        errArr.push("User Name is Required");
+        errArr.push("Email is Required");
       }
       if (!obj.cnic) {
-        errArr.push("User Name is Required");
+        errArr.push("Cnic is Required");
       }
       if (!obj.role) {
-        errArr.push("User Name is Required");
+        errArr.push("Role is Required");
       }
       if (!obj.contact) {
-        errArr.push("User Name is Required");
+        errArr.push("Contact is Required");
       }
       if (!obj.password) {
         errArr.push("Password is Required");
